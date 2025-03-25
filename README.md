@@ -17,8 +17,14 @@ DATABASE_URL=postgresql://<user>:<password>@<host>:<port>/<database>
 IMGUR_TOKEN=bearertokenAPI
 ```
 
+* Iniciar watcher de typescript
+
+```sh
+npm run watch:build
+```
+
 * Iniciar servidor
 
 ```sh
-npm run dev
+npm run watch:serve
 ```
