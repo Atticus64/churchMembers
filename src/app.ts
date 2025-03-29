@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import { add } from './math.js';
-import { api } from './api.js';
+import { api } from './api/index.js';
 import { pinoHttp } from 'pino-http';
 import postgres from 'postgres';
 
@@ -19,6 +19,11 @@ const log = pinoHttp({
     level: 'debug'
 });
 app.use(log);
+
+// Add JSON parsing middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use('/api', api);
 
 const PORT = process.env.PORT || 3000;
@@ -41,7 +46,12 @@ app.get("/", async (_request: Request, response: Response) => {
 
 app.listen(PORT, () => {
     console.log(`[Server]: running at http://localhost:${PORT}`);
-}).on("error", (error) => {
+}).on("error", async (error) => {
     // gracefully handle error
+    await sql.end();
     throw new Error(error.message);
+}).on("close", async () => {
+    await sql.end();
+    console.log("Database connection closed");
+    console.log("Server closed");
 });
