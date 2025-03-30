@@ -1,6 +1,8 @@
 import { Router, Request, Response } from 'express';
 import postgres from 'postgres';
 import dotenv from 'dotenv';
+import { dtoMember } from '../model/member.js';
+import { uploadImage } from '../util/img.js';
 
 dotenv.config();
 const sql = postgres(
@@ -42,28 +44,30 @@ membersRouter.get('/:id', async (request: Request, response: Response) => {
 // Create new member
 membersRouter.post('/', async (request: Request, response: Response) => {
     const { 
-        firstname, lastname, middlename, dateofbirth, gender, 
-        maritalstatus, occupation, phonenumber, mobilenumber,
-        email, whatsapp, socialmedia, contactnotes, addressid 
-    } = request.body;
+        firstName, lastName, middleName, image, dateOfBirth, gender, 
+        maritalStatus, occupation, phoneNumber, mobileNumber,
+        email, whatsapp, socialMedia, contactNotes, addressId 
+    }: dtoMember = request.body;
     
     try {
         // Get the next available ID
         const result = await sql`SELECT COALESCE(MAX(id), 0) as max_id FROM member`;
         const newId = result[0].max_id + 1;
+
+        const url = await uploadImage(image, 'Profile Picture', 'Profile Picture for ' + firstName + ' ' + lastName);
         
         const newMember = await sql`
             INSERT INTO member (
-                id, firstname, lastname, middlename, dateofbirth, 
+                id, firstname, lastname, middlename, profile_url, dateofbirth,
                 gender, maritalstatus, occupation, phonenumber,
                 mobilenumber, email, whatsapp, socialmedia,
                 contactnotes, addressid
             ) VALUES (
-                ${newId}, ${firstname}, ${lastname}, ${middlename},
-                ${dateofbirth}, ${gender}, ${maritalstatus},
-                ${occupation}, ${phonenumber}, ${mobilenumber},
-                ${email}, ${whatsapp}, ${socialmedia},
-                ${contactnotes}, ${addressid}
+                ${newId}, ${firstName}, ${lastName}, ${middleName},
+                ${url}, ${dateOfBirth}, ${gender}, ${maritalStatus},
+                ${occupation}, ${phoneNumber}, ${mobileNumber},
+                ${email}, ${whatsapp}, ${socialMedia},
+                ${contactNotes}, ${addressId}
             ) RETURNING *
         `;
         

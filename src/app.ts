@@ -21,8 +21,8 @@ const log = pinoHttp({
 app.use(log);
 
 // Add JSON parsing middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '200mb' }));
+app.use(express.urlencoded({ extended: true, limit: '200mb' }));
 
 app.use('/api', api);
 
