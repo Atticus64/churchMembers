@@ -3,26 +3,26 @@ import dotenv from 'dotenv';
 import { add } from './math.js';
 import { api } from './api/index.js';
 import { pinoHttp } from 'pino-http';
-import postgres from 'postgres';
+import cors from 'cors';
+import { sql } from './db/connect.js';
 
 
 dotenv.config();
-const sql  = postgres(
-    process.env.DATABASE_URL ??
-    'postgresql://postgres:postgres@localhost:5432/crypto'
-);
 
 const app = express();
 const log = pinoHttp({
     name: 'server',
     quietReqLogger: true,
-    level: 'debug'
+    level: 'silent'
 });
 app.use(log);
 
+app.use(cors());
+
+
 // Add JSON parsing middleware
 app.use(express.json({ limit: '200mb' }));
-app.use(express.urlencoded({ extended: true, limit: '200mb' }));
+// app.use(express.urlencoded({ extended: true, limit: '200mb' }));
 
 app.use('/api', api);
 
