@@ -47,6 +47,7 @@ async function generateFakeData(numRecords = 10) {
                 firstName: faker.person.firstName(),
                 lastName: faker.person.lastName(),
                 middleName: faker.person.middleName(),
+                active: faker.datatype.boolean(),
                 profileUrl: faker.image.avatar(),
                 dateOfBirth: faker.date.birthdate(),
                 gender: faker.helpers.arrayElement(['M', 'F']),
@@ -61,31 +62,16 @@ async function generateFakeData(numRecords = 10) {
                 addressId: i + 1
             };
 
-            console.log(`INSERT INTO member (
-    id, firstName, lastName, middleName, profile_url,
-    dateOfBirth, gender, maritalStatus, occupation,
-    phoneNumber, mobileNumber, email, whatsapp,
-    socialMedia, contactNotes, addressId
-) VALUES (
-    ${member.id}, '${member.firstName}', '${member.lastName}',
-    '${member.middleName}', '${member.profileUrl}',
-    '${member.dateOfBirth}', '${member.gender}',
-    '${member.maritalStatus}', ${member.occupation},
-    '${member.phoneNumber}', ${member.mobileNumber},
-    '${member.email}', '${member.whatsapp}',
-    '${member.socialMedia}', '${member.contactNotes}',
-    ${member.addressId}
-);`);
-
             await sql`
                 INSERT INTO member (
-                    id, firstName, lastName, middleName, profile_url,
-                    dateOfBirth, gender, maritalStatus, occupation,
+                    id, firstName, lastName, middleName, active,
+                    profile_url, dateOfBirth, gender, maritalStatus, occupation,
                     phoneNumber, mobileNumber, email, whatsapp,
                     socialMedia, contactNotes, addressId
                 ) VALUES (
-                    ${member.id}, ${member.firstName}, ${member.lastName},
-                    ${member.middleName}, ${member.profileUrl},
+                    ${member.id}, ${member.firstName}, ${member.lastName}, 
+                    ${member.middleName},
+                    ${member.active}, ${member.profileUrl},
                     ${member.dateOfBirth}, ${member.gender},
                     ${member.maritalStatus}, ${member.occupation},
                     ${member.phoneNumber}, ${member.mobileNumber},

@@ -36,6 +36,7 @@ CREATE TABLE Member (
     LastName        varchar(45),
     MiddleName      varchar(45),
     profile_url     varchar(150),
+    active          boolean,
     DateOfBirth     DATE,
     Gender          CHAR,
     MaritalStatus   CHAR,
