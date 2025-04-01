@@ -19,7 +19,7 @@ const sql = postgres(
 async function createTables() {
     try {
         console.log('Reading SQL structure file...');
-        const sqlFilePath = path.join(__dirname, '..', 'db', 'struct.sql');
+        const sqlFilePath = path.join(__dirname, '..', 'sql', 'struct.sql');
         const sqlContent = await fs.readFile(sqlFilePath, 'utf-8');
 
         const sqlParsed = sqlContent.split('\n')
